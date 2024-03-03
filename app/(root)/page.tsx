@@ -1,19 +1,29 @@
 "use client";
 import * as React from "react";
-import Map from "react-map-gl";
-export default function Home() {
+import MapCanvas from "@/components/shared/MapCanvas";
+import { GetRoute } from "@/lib/actions/map.actions";
+import { Button } from "@/components/ui/button";
+export default async function Home() {
+  async function getRoute() {
+    const query = {
+      origin: { lng: "-73.979992", lat: "40.760417" },
+      destination: { lng: "-75.690057", lat: "45.421144 " },
+    };
+    const route = await GetRoute({
+      query,
+    });
+
+    console.log(
+      "test",
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${query.origin.lng}%2C${query.origin.lat}%3B${query.destination.lng}%2C${query.destination.lat}?access_token=${process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}`
+    );
+    console.log(typeof query.origin.lng);
+    console.log(route);
+  }
   return (
     <>
-      <Map
-        mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_API_TOKEN}
-        initialViewState={{
-          longitude: -122.4,
-          latitude: 37.8,
-          zoom: 14,
-        }}
-        style={{ width: 600, height: 400 }}
-        mapStyle='mapbox://styles/mapbox/streets-v9'
-      />
+      <Button onClick={getRoute}></Button>
+      <MapCanvas></MapCanvas>
     </>
   );
 }
